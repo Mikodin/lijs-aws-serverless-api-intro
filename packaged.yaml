@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'sam-app
+
+  Sample SAM Template for sam-app
+
+  '
+Globals:
+  Function:
+    Timeout: 3
+Resources:
+  GetUsersFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://lijs-aws-serverless-api-intro-dev/lijs-aws-serverless-api-intro-dev/a5b5840d31507b848d3f03c16f389cd9
+      Handler: getUser.handler
+      Runtime: nodejs8.10
+      Events:
+        GetUsersEndpoint:
+          Type: Api
+          Properties:
+            Path: /user
+            Method: get
+  SaveUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://lijs-aws-serverless-api-intro-dev/lijs-aws-serverless-api-intro-dev/a5b5840d31507b848d3f03c16f389cd9
+      Handler: saveUser.handler
+      Runtime: nodejs8.10
+      Events:
+        SaveUsersEndpoint:
+          Type: Api
+          Properties:
+            Path: /user
+            Method: post
