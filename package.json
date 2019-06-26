@@ -6,10 +6,23 @@
 	"repository": "https://github.com/awslabs/aws-sam-cli/tree/develop/samcli/local/init/templates/cookiecutter-aws-sam-hello-nodejs",
 	"author": "SAM CLI",
 	"license": "MIT",
-	"dependencies": {},
-	"scripts": {},
+	"scripts": {
+		"build": "babel src/** --out-dir dist --extensions '.ts,.tsx'",
+		"build:watch": "yarn build --watch",
+		"tsc": "tsc"
+	},
+	"dependencies": {
+		"@babel/polyfill": "^7.4.4",
+		"core-js": "^3.1.4",
+		"regenerator-runtime": "^0.13.2"
+	},
 	"devDependencies": {
+		"@babel/cli": "^7.4.4",
+		"@babel/core": "^7.4.5",
+		"@babel/preset-env": "^7.4.5",
+		"@babel/preset-typescript": "^7.3.3",
 		"chai": "^4.1.2",
-		"mocha": "^5.1.1"
+		"mocha": "^5.1.1",
+		"typescript": "^3.5.2"
 	}
 }
