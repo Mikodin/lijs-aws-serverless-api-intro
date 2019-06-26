@@ -14,11 +14,11 @@
 	"scripts": {
 		"build": "babel src/** --out-dir dist --extensions '.ts,.tsx'",
 		"build:watch": "yarn build --watch",
-		"deploy:local": "AWS_PROFILE=dev sam local start-api",
-		"make:bucket": "AWS_PROFILE=dev aws s3 mb s3://lijs-aws-serverless-api-intro-dev",
-		"package": "export AWS_PROFILE=${AWS_PROFILE:-dev} STAGE=${STAGE:-dev} && aws cloudformation package --template-file template.yaml --s3-bucket $npm_package_config_bucketName-${STAGE} --s3-prefix $npm_package_config_bucketName-${STAGE:-dev} --output-template-file packaged.yaml",
-		"sam:deploy": "export AWS_PROFILE=${AWS_PROFILE:-dev} STAGE=${STAGE:-dev} && aws cloudformation deploy --template-file packaged.yaml --stack-name $npm_package_config_stackName-${STAGE:-dev} --capabilities CAPABILITY_IAM --region $npm_package_config_region",
-		"sam:describe": "export AWS_PROFILE=${AWS_PROFILE:-dev} STAGE=${STAGE:-dev} && aws cloudformation describe-stacks --stack-name $npm_package_config_stackName-${STAGE:-dev} --query 'Stacks[].Outputs' --output table --region $npm_package_config_region",
+		"deploy:local": "sam local start-api",
+		"make:bucket": "aws s3 mb s3://$npm_package_config_bucketName",
+		"package": "STAGE=${STAGE:-dev} && aws cloudformation package --template-file template.yaml --s3-bucket $npm_package_config_bucketName --s3-prefix $npm_package_config_bucketName-${STAGE:-dev} --output-template-file packaged.yaml",
+		"sam:deploy": "STAGE=${STAGE:-dev} && aws cloudformation deploy --template-file packaged.yaml --stack-name $npm_package_config_stackName-${STAGE:-dev} --capabilities CAPABILITY_IAM --region $npm_package_config_region",
+		"sam:describe": "STAGE=${STAGE:-dev} && aws cloudformation describe-stacks --stack-name $npm_package_config_stackName-${STAGE:-dev} --query 'Stacks[].Outputs' --output table --region $npm_package_config_region",
 		"sam:delete": "aws cloudformation delete-stack --stack-name $npm_package_config_stackName-${STAGE:-dev}",
 		"deploy:dev": "yarn build && yarn package && yarn sam:deploy && yarn sam:describe"
 	},
