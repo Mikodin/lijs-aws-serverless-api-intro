@@ -8,24 +8,17 @@ Description: 'sam-app
 Globals:
   Function:
     Timeout: 3
-    Environment:
-      Variables:
-        USER_TABLE_NAME: User
 Resources:
-  GetUsersFunction:
+  GetUserFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://lijs-aws-serverless-api-intro/lijs-aws-serverless-api-intro-dev/310d56a9cba5f2e113019e47880b7691
+      CodeUri: s3://lijs-aws-serverless-api-intro/lijs-aws-serverless-api-intro-dev/f23d950bae6cba2628d2793be7ed9299
       Handler: getUser.handler
       Runtime: nodejs8.10
-      Events:
-        GetUsersEndpoint:
-          Type: Api
-          Properties:
-            Path: /user
-            Method: get
+      Environment:
+        Variables:
+          USER_TABLE_NAME: User
       Policies:
-      - Version: '2012-10-17'
         Statement:
         - Effect: Allow
           Action:
@@ -35,28 +28,12 @@ Resources:
             Fn::GetAtt:
             - UserTable
             - Arn
-  SaveUserFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: s3://lijs-aws-serverless-api-intro/lijs-aws-serverless-api-intro-dev/310d56a9cba5f2e113019e47880b7691
-      Handler: saveUser.handler
-      Runtime: nodejs8.10
       Events:
-        SaveUsersEndpoint:
+        GetUser:
           Type: Api
           Properties:
-            Path: /user
-            Method: post
-      Policies:
-      - Version: '2012-10-17'
-        Statement:
-        - Effect: Allow
-          Action:
-          - dynamodb:PutItem
-          Resource:
-            Fn::GetAtt:
-            - UserTable
-            - Arn
+            Path: /{user_id}
+            Method: get
   UserTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -70,5 +47,3 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-      SSESpecification:
-        SSEEnabled: true
