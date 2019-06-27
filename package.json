@@ -2,7 +2,7 @@
 	"name": "hello_world",
 	"version": "1.0.0",
 	"description": "hello world sample for NodeJS",
-	"main": "src/endpoints/app.js",
+	"main": "app.js",
 	"repository": "https://github.com/awslabs/aws-sam-cli/tree/develop/samcli/local/init/templates/cookiecutter-aws-sam-hello-nodejs",
 	"author": "SAM CLI",
 	"license": "MIT",
@@ -11,29 +11,27 @@
 		"stackName": "lijs-aws-serverless-api-intro",
 		"region": "us-east-1"
 	},
+	"dependencies": {
+		"aws-sdk": "^2.483.0",
+		"axios": "^0.18.0",
+		"lambda-log": "^2.3.0"
+	},
 	"scripts": {
-		"build": "babel src/** --out-dir dist --extensions '.ts,.tsx'",
+		"test": "mocha tests/unit/",
+		"build": "babel src/** --out-dir dist --extensions '.ts'",
 		"build:watch": "yarn build --watch",
-		"deploy:local": "sam local start-api",
+		"start:local": "sam local start-api",
 		"make:bucket": "aws s3 mb s3://$npm_package_config_bucketName",
 		"package": "STAGE=${STAGE:-dev} && aws cloudformation package --template-file template.yaml --s3-bucket $npm_package_config_bucketName --s3-prefix $npm_package_config_bucketName-${STAGE:-dev} --output-template-file packaged.yaml",
 		"sam:deploy": "STAGE=${STAGE:-dev} && aws cloudformation deploy --template-file packaged.yaml --stack-name $npm_package_config_stackName-${STAGE:-dev} --capabilities CAPABILITY_IAM --region $npm_package_config_region",
-		"sam:describe": "STAGE=${STAGE:-dev} && aws cloudformation describe-stacks --stack-name $npm_package_config_stackName-${STAGE:-dev} --query 'Stacks[].Outputs' --output table --region $npm_package_config_region",
-		"sam:delete": "aws cloudformation delete-stack --stack-name $npm_package_config_stackName-${STAGE:-dev}",
-		"deploy:dev": "yarn build && yarn package && yarn sam:deploy && yarn sam:describe"
-	},
-	"dependencies": {
-		"@babel/polyfill": "^7.4.4",
-		"core-js": "^3.1.4",
-		"regenerator-runtime": "^0.13.2"
+		"deploy:dev": "yarn build && yarn package && yarn sam:deploy"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.4.4",
 		"@babel/core": "^7.4.5",
 		"@babel/preset-env": "^7.4.5",
 		"@babel/preset-typescript": "^7.3.3",
-		"chai": "^4.1.2",
-		"mocha": "^5.1.1",
+		"@types/aws-lambda": "^8.10.27",
 		"typescript": "^3.5.2"
 	}
 }

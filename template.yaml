@@ -9,52 +9,31 @@ Description: >
 Globals:
   Function:
     Timeout: 3
-    Environment:
-      Variables:
-        USER_TABLE_NAME: 'User'
 
 Resources:
-  GetUsersFunction:
+  GetUserFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: dist/
       Handler: getUser.handler
       Runtime: nodejs8.10
+      Environment:
+        Variables:
+          USER_TABLE_NAME: User
+      Policies:
+        Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:GetItem
+            Resource:
+              Fn::GetAtt: [UserTable, Arn]
       Events:
-        GetUsersEndpoint:
+        GetUser:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
-            Path: /user
+            Path: /{user_id}
             Method: get
-      Policies:
-        - Version: '2012-10-17' # Policy Document
-          Statement:
-            - Effect: Allow
-              Action:
-                - dynamodb:BatchGetItem
-                - dynamodb:GetItem
-              Resource:
-                Fn::GetAtt: [UserTable, Arn]
-  SaveUserFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      CodeUri: dist/
-      Handler: saveUser.handler
-      Runtime: nodejs8.10
-      Events:
-        SaveUsersEndpoint:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            Path: /user
-            Method: post
-      Policies:
-        - Version: '2012-10-17' # Policy Document
-          Statement:
-            - Effect: Allow
-              Action:
-                - dynamodb:PutItem
-              Resource:
-                Fn::GetAtt: [UserTable, Arn]
   UserTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -68,5 +47,3 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-      SSESpecification:
-        SSEEnabled: true
