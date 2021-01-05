@@ -13,7 +13,7 @@
 	},
 	"dependencies": {
 		"aws-sdk": "^2.483.0",
-		"axios": "^0.18.0",
+		"axios": "^0.21.1",
 		"lambda-log": "^2.3.0"
 	},
 	"scripts": {
